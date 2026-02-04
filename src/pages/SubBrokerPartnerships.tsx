@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, LifeBuoy, Rocket, ShieldCheck, TrendingUp, Users, Zap } from 'lucide-react';
 import Button from '../components/Button';
@@ -17,10 +17,12 @@ const SubBrokerPartnerships = () => {
     email: '',
     phone: '',
     message: '',
+    companyWebsite: '',
     marketingOptIn: false,
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
+  const formStartedAtRef = useRef(Date.now());
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -107,6 +109,7 @@ const SubBrokerPartnerships = () => {
         body: JSON.stringify({
           ...form,
           enquiryType: 'Sub-broker partnership',
+          formStartedAt: formStartedAtRef.current,
         }),
       });
 
@@ -117,7 +120,8 @@ const SubBrokerPartnerships = () => {
       const result = await response.json();
       if (result.success) {
         setFormStatus('success');
-        setForm({ name: '', businessName: '', email: '', phone: '', message: '', marketingOptIn: false });
+        formStartedAtRef.current = Date.now();
+        setForm({ name: '', businessName: '', email: '', phone: '', message: '', companyWebsite: '', marketingOptIn: false });
       } else {
         throw new Error(result.error || 'Failed to submit form');
       }
@@ -330,6 +334,18 @@ const SubBrokerPartnerships = () => {
 
             <div>
               <form className="space-y-4" autoComplete="off" aria-label="Sub-broker Partnership Enquiry Form" onSubmit={handleFormSubmit}>
+                <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="subBrokerCompanyWebsite">Company website</label>
+                  <input
+                    id="subBrokerCompanyWebsite"
+                    name="companyWebsite"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.companyWebsite}
+                    onChange={handleInputChange}
+                  />
+                </div>
                 <Input label="Name" id="subBrokerName" name="name" type="text" required placeholder="Your full name" variant="glass" value={form.name} onChange={handleInputChange} />
                 <Input label="Business Name" id="subBrokerBusinessName" name="businessName" type="text" required placeholder="Your business name" variant="glass" value={form.businessName} onChange={handleInputChange} />
                 <Input label="Email" id="subBrokerEmail" name="email" type="email" required placeholder="Email Address" variant="glass" value={form.email} onChange={handleInputChange} />

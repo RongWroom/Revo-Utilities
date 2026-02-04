@@ -2,6 +2,47 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const MIN_FORM_FILL_TIME_MS = 1500;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+const rateLimitStore = new Map();
+
+const getClientIp = (req) => {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  if (Array.isArray(forwardedFor) && forwardedFor.length) {
+    return forwardedFor[0].trim();
+  }
+  return req.socket?.remoteAddress || 'unknown';
+};
+
+const isRateLimited = (clientIp) => {
+  const now = Date.now();
+  const existing = rateLimitStore.get(clientIp);
+
+  if (!existing || now - existing.start >= RATE_LIMIT_WINDOW_MS) {
+    rateLimitStore.set(clientIp, { start: now, count: 1 });
+    return false;
+  }
+
+  existing.count += 1;
+  rateLimitStore.set(clientIp, existing);
+  return existing.count > RATE_LIMIT_MAX;
+};
+
+const isLikelyBot = ({ companyWebsite, formStartedAt } = {}) => {
+  if (typeof companyWebsite === 'string' && companyWebsite.trim()) {
+    return true;
+  }
+  const startedAt = Number(formStartedAt);
+  if (Number.isFinite(startedAt)) {
+    return Date.now() - startedAt < MIN_FORM_FILL_TIME_MS;
+  }
+  return false;
+};
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -21,6 +62,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const clientIp = getClientIp(req);
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
   try {
     const {
       name,
@@ -31,6 +77,8 @@ export default async function handler(req, res) {
       marketingOptIn,
       enquiryType,
       message,
+      companyWebsite,
+      formStartedAt,
     } = req.body || {};
 
     const resolvedEnquiryType =
@@ -42,6 +90,10 @@ export default async function handler(req, res) {
 
     if (!name || !businessName || !email || !phone || (requiresCurrentSupplier && !currentSupplier)) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (isLikelyBot({ companyWebsite, formStartedAt })) {
+      return res.json({ success: true, message: 'Enquiry submitted successfully' });
     }
 
     // Email to your business

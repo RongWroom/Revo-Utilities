@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Phone, ChevronDown } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SEOManager, pageSEOConfigs } from '../utils/seoUtils';
 import { useLocation } from 'react-router-dom';
 import { StructuredDataManager } from '../utils/structuredData';
@@ -21,10 +21,12 @@ const Comparison = () => {
     email: '',
     phone: '',
     currentSupplier: '',
+    companyWebsite: '',
     marketingOptIn: false,
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
+  const formStartedAtRef = useRef(Date.now());
 
   useEffect(() => {
     // Scroll to top on page load
@@ -88,6 +90,7 @@ const Comparison = () => {
         body: JSON.stringify({
           ...form,
           subscriberPreference: form.marketingOptIn,
+          formStartedAt: formStartedAtRef.current,
         }),
       });
 
@@ -99,7 +102,8 @@ const Comparison = () => {
       if (result.success) {
         setFormStatus('success');
         console.info('Enquiry submitted successfully.');
-        setForm({ name: '', businessName: '', email: '', phone: '', currentSupplier: '', marketingOptIn: false });
+        formStartedAtRef.current = Date.now();
+        setForm({ name: '', businessName: '', email: '', phone: '', currentSupplier: '', companyWebsite: '', marketingOptIn: false });
       } else {
         throw new Error(result.error || 'Failed to submit form');
       }
@@ -174,6 +178,18 @@ const Comparison = () => {
               <h2 className="text-2xl font-bold mb-4 text-[var(--secondary-color)] text-center">Compare Us</h2>
               <p className="text-[var(--secondary-color)]/80 mb-6 text-center">Fill in your details below and let&apos;s see how you can save on your utility bills.</p>
               <form className="space-y-4" autoComplete="off" aria-label="Utilities Comparison Enquiry Form" onSubmit={handleFormSubmit}>
+                <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="companyWebsite">Company website</label>
+                  <input
+                    id="companyWebsite"
+                    name="companyWebsite"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.companyWebsite}
+                    onChange={handleInputChange}
+                  />
+                </div>
                 <Input label="Name" id="name" name="name" type="text" required placeholder="Your full name" variant="glass" value={form.name} onChange={handleInputChange} />
                 <Input label="Business Name" id="businessName" name="businessName" type="text" required placeholder="Your business name" variant="glass" value={form.businessName} onChange={handleInputChange} />
                 <Input label="Email" id="email" name="email" type="email" required placeholder="Email Address" variant="glass" value={form.email} onChange={handleInputChange} />
