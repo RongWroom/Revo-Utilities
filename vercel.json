@@ -80,39 +80,11 @@
   ],
   "rewrites": [
     {
-      "source": "/our-services",
-      "destination": "/index.html"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
-      "source": "/insights",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/insights/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/team",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/comparison",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/privacy",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/terms",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/blog-admin",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/partnerships",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
