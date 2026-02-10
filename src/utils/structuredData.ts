@@ -27,7 +27,7 @@ export class StructuredDataManager {
         "name": "Revo Utilities",
         "logo": {
           "@type": "ImageObject",
-          "url": `${window.location.origin}/public/logos/Revo/revo-utilities-meta-card.webp`
+          "url": `${window.location.origin}/logos/Revo/revo-utilities-meta-card.webp`
         }
       },
       "mainEntityOfPage": {
@@ -66,7 +66,7 @@ export class StructuredDataManager {
         "name": "Revo Utilities",
         "logo": {
           "@type": "ImageObject",
-          "url": `${window.location.origin}/public/logos/Revo/revo-utilities-meta-card.webp`
+          "url": `${window.location.origin}/logos/Revo/revo-utilities-meta-card.webp`
         }
       }
     };
@@ -131,7 +131,7 @@ export class StructuredDataManager {
       "url": `${window.location.origin}`,
       "logo": {
         "@type": "ImageObject",
-        "url": `${window.location.origin}/public/logos/Revo/revo-utilities-meta-card.webp`
+        "url": `${window.location.origin}/logos/Revo/revo-utilities-meta-card.webp`
       },
       "contactPoint": {
         "@type": "ContactPoint",

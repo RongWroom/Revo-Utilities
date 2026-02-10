@@ -4,7 +4,7 @@ Allow: /
 # Block admin and development paths
 Disallow: /blog-admin
 Disallow: /admin/
-Disallow: /_next/
+
 Disallow: /api/
 Disallow: /.well-known/
 

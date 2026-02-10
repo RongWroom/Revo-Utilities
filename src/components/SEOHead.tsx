@@ -27,12 +27,12 @@ const SEOHead = ({
   structuredData
 }: SEOHeadProps) => {
   const location = useLocation();
-  
-  const defaultTitle = 'Revo Utilities | Save on Business Gas, Electricity & Water';
+
+  const defaultTitle = 'Business Utility Broker UK | Revo Utilities';
   const defaultDescription = 'Revo Utilities helps UK businesses save up to 50% on gas, electricity, and water rates. Get independent advice, competitive quotes, and flexible billing from trusted experts.';
-  const defaultImage = '/public/logos/Revo/revo-utilities-meta-card.webp';
+  const defaultImage = '/logos/Revo/revo-utilities-meta-card.webp';
   const baseUrl = 'https://www.revo-utilities.com';
-  
+
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
   const finalImage = image || defaultImage;
@@ -46,7 +46,7 @@ const SEOHead = ({
     const updateMetaTag = (name: string, content: string, property = false) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let meta = document.querySelector(selector) as HTMLMetaElement;
-      
+
       if (!meta) {
         meta = document.createElement('meta');
         if (property) {
@@ -56,7 +56,7 @@ const SEOHead = ({
         }
         document.head.appendChild(meta);
       }
-      
+
       meta.setAttribute('content', content);
     };
 
@@ -64,7 +64,7 @@ const SEOHead = ({
     updateMetaTag('description', finalDescription);
     if (keywords) updateMetaTag('keywords', keywords);
     if (author) updateMetaTag('author', author);
-    
+
     // Update canonical URL
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     if (!canonical) {
@@ -80,7 +80,7 @@ const SEOHead = ({
     updateMetaTag('og:image', finalImage, true);
     updateMetaTag('og:url', finalUrl, true);
     updateMetaTag('og:type', type, true);
-    
+
     if (publishedTime) updateMetaTag('article:published_time', publishedTime, true);
     if (modifiedTime) updateMetaTag('article:modified_time', modifiedTime, true);
     if (author) updateMetaTag('article:author', author, true);

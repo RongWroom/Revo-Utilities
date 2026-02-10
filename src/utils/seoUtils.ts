@@ -48,7 +48,7 @@ export class SEOManager {
     const updateMetaTag = (name: string, content: string, property = false) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let meta = document.querySelector(selector) as HTMLMetaElement;
-      
+
       if (!meta) {
         meta = document.createElement('meta');
         if (property) {
@@ -58,7 +58,7 @@ export class SEOManager {
         }
         document.head.appendChild(meta);
       }
-      
+
       meta.setAttribute('content', content);
     };
 
@@ -125,7 +125,7 @@ export class SEOManager {
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
-      
+
       breadcrumbs.push({
         name,
         url: `${this.baseUrl}${currentPath}`
@@ -139,7 +139,7 @@ export class SEOManager {
 // Pre-configured SEO settings for different pages
 export const pageSEOConfigs = {
   home: {
-    title: 'Revo Utilities | Save on Business Gas, Electricity & Water',
+    title: 'Business Utility Broker UK | Revo Utilities',
     description: 'Revo Utilities helps UK businesses save up to 50% on gas, electricity, and water rates. Get independent advice, competitive quotes, and flexible billing from trusted experts.',
     keywords: 'business utilities, gas, electricity, water, UK, energy savings, commercial utilities, flexible billing, Revo Utilities',
     structuredDataType: 'organization' as const

@@ -18,7 +18,7 @@ const Home = () => {
       {
         ...pageSEOConfigs.home,
         // Stronger home targeting
-        title: 'Business Utilities Comparison | Save on Gas, Electricity & Water | Revo Utilities',
+        title: 'Business Utility Broker UK | Revo Utilities',
         description:
           'Compare business utilities with Revo Utilities. Expert brokers for UK businesses to cut costs on gas, electricity and water with tailored contracts and renewable options.',
         keywords:
@@ -124,6 +124,9 @@ const Home = () => {
                   className="h-16 md:h-20 w-auto object-contain"
                 />
               </div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--secondary-color)] leading-tight mb-6">
+                Business Utility Broker for Gas, Electricity &amp; Water
+              </h1>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button to="/comparison" variant="primary" size="lg" className="text-lg px-8 py-4 shadow-lg hover:shadow-xl">
                   Get Your Free Energy Audit
